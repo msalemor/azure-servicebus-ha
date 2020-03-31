@@ -20,6 +20,9 @@ namespace MQ.Emitter
         private static bool primaryAvailable;
         private static bool secondaryAvailable;
 
+        // Active-Active or Active-Passive
+        private static ProcessingMode Mode = ProcessingMode.ActiveActive;
+
         public static async Task Main(string[] args)
         {
             const int numberOfMessages = 10;
@@ -43,12 +46,6 @@ namespace MQ.Emitter
             {
             }
 
-            if (!primaryAvailable && !secondaryAvailable)
-            {
-                Console.WriteLine("Both the primary and secondary namespaces are not avaible.");
-                Environment.Exit(-1);
-            }
-
             Console.WriteLine("======================================================");
             Console.WriteLine("Press ENTER key to exit after sending all the messages.");
             Console.WriteLine("======================================================");
@@ -58,8 +55,25 @@ namespace MQ.Emitter
 
             Console.ReadKey();
 
-            await primaryQueueClient.CloseAsync();
-            await secondaryQueueClient.CloseAsync();
+            await CloseAsync();
+        }
+
+        private static async Task CloseAsync()
+        {
+            try
+            {
+                await primaryQueueClient.CloseAsync();
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                await secondaryQueueClient.CloseAsync();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         static async Task SendMessagesAsync(int numberOfMessagesToSend)
@@ -100,7 +114,7 @@ namespace MQ.Emitter
             var rnd = new Random(Environment.TickCount);
             var orderDetails = new List<OrderDetail>();
 
-            for(var i=0;i<100;i++)
+            for (var i = 0; i < 100; i++)
             {
                 var sku = (i + 100).ToString();
                 var orderDetail = new OrderDetail { Sku = sku, Description = $"Item Description {sku}", Qty = rnd.Next(1, 100), Price = rnd.Next(10, 1000) };
@@ -108,29 +122,38 @@ namespace MQ.Emitter
             }
 
             order.OrderDetails = orderDetails.ToArray();
-            
+
             string messageBody = JsonConvert.SerializeObject(order);
             return messageBody;
         }
 
         private static async Task SendMessageHAAsync(Message message)
         {
+            if (!primaryAvailable && !secondaryAvailable)
+            {
+                Console.WriteLine("Both the primary and secondary namespaces are not avaible.");
+                await CloseAsync();
+                Environment.Exit(-1);
+            }
+
             try
             {
                 await primaryQueueClient.SendAsync(message);
             }
             catch (Exception)
             {
-                //throw;
+                primaryAvailable = false;
             }
-            try
-            {
-                await secondaryQueueClient.SendAsync(message);
-            }
-            catch (Exception)
-            {
-                //throw;
-            }
+            if (Mode == ProcessingMode.ActiveActive || (Mode == ProcessingMode.ActivePassive && !primaryAvailable))
+                try
+                {
+                    await secondaryQueueClient.SendAsync(message);
+                }
+                catch (Exception)
+                {
+                    //throw;
+                    secondaryAvailable = false;
+                }
         }
     }
 }

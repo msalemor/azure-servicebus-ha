@@ -17,11 +17,12 @@ Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "MQ.ServiceBusAndQueues", "s
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2BE2F9A0-F8E8-485C-9E65-1F11E19C4F19}"
 	ProjectSection(SolutionItems) = preProject
-		active-active pattern.png = active-active pattern.png
+		active-active.png = active-active.png
+		active-passive.png = active-passive.png
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MQ.MessageReceiver", "src\MQ.MessageReceiver\MQ.MessageReceiver.csproj", "{98ADEA30-84F3-40BF-83B6-E9F0AD091982}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQ.MessageReceiver", "src\MQ.MessageReceiver\MQ.MessageReceiver.csproj", "{98ADEA30-84F3-40BF-83B6-E9F0AD091982}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzFunction", "AzFunction", "{FF4FFDC8-C2CE-4E4B-AEF5-678187FCC333}"
 EndProject

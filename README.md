@@ -13,8 +13,13 @@ Currently Azure Service Bus in geo-disaster recovery copies the metadata only, b
 - Create two namespaces in different regions
 - Create a queue with the same name in the different regions
 - Send a message to both regions
-- Process message from both regions
-- Have logic to determine if message has already been processed
+- Receive messages from both regions
+  - Have logic to determine if message has already been processed
+
+### Diagram
+
+![Alt text](active-active.png){ width=100% }
+
 
 ### Emmitter Logic
 
@@ -104,3 +109,14 @@ static bool IsProcessed(Guid guid)
 ```
 
 ## Active-Passive Approach
+
+- Create two namespaces in different regions
+- Create a queue with the same name in the different regions
+- Send a message to primary region
+- On failure, send messages to secondary region
+- Receive from both regions
+  - Have logic to determine if message has already been processed 
+
+### Diagram
+
+![Alt text](active-passive.png){ width=100% }
