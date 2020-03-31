@@ -18,8 +18,9 @@ Currently Azure Service Bus in geo-disaster recovery copies the metadata only, b
 
 ### Diagram
 
-![Alt text](active-active.png){ width=100% }
-
+<p align="center">
+  <img src="active-active.png" width="90%" title="Active-Active pattern">
+</p>
 
 ### Emmitter Logic
 
@@ -119,4 +120,7 @@ static bool IsProcessed(Guid guid)
 
 ### Diagram
 
-![Alt text](active-passive.png){ width=100% }
+<p align="center">
+  <img src="active-passive.png" width="90%" title="Active-Passive pattern">
+</p>
+
