@@ -1,9 +1,12 @@
-# azure-servicebus-ha
+# Azure Service Bus - High Availability Patterns
+
 Azure Service High Availability Pattern
 
-## Service Bus - Geo Recovery
+## Service Bus - Geo-Disaster Recovery
 
-Currently copies metadata only, but not the data. Backup region is readonly and will become writable once a failover is initiated.
+Currently Azure Service Bus in geo-disaster recovery copies the metadata only, but not the data. The secondary region is readonly and will become writable once a failover is initiated.
+
+- https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-geo-dr
 
 ## Active-Active Approach
 
@@ -13,8 +16,7 @@ Currently copies metadata only, but not the data. Backup region is readonly and 
 - Process message from both regions
 - Have logic to determine if message has already been processed
 
-
-# Emmitter Logic
+### Emmitter Logic
 
 Try to write message to both regions
 
@@ -40,7 +42,7 @@ private static async Task SendMessageHAAsync(Message message)
 }
 ```
 
-# Receiver Logic
+### Receiver Logic
 
 Process from one region, and discard from second region if message has already been processed.
 
@@ -81,7 +83,7 @@ static async Task PrimaryProcessMessagesAsync(Message message, CancellationToken
 }
 ```
 
-### Messaged Already Processed Logic
+### Messages Already Processed Logic
 
 This sample app uses a simple approach to keep state in memory.
 
@@ -100,3 +102,5 @@ static bool IsProcessed(Guid guid)
     }
 }
 ```
+
+## Active-Passive Approach

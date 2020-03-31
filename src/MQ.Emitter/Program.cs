@@ -14,8 +14,6 @@ namespace MQ.Emitter
     {
         // Connection String for the namespace can be obtained from the Azure portal under the 
         // 'Shared Access policies' section.
-        const string PrimaryServiceBusConnectionString = "";
-        const string SecondaryServiceBusConnectionString = "";
         const string QueueName = "job-queue";
         static IQueueClient primaryQueueClient;
         private static IQueueClient secondaryQueueClient;
@@ -29,7 +27,7 @@ namespace MQ.Emitter
             secondaryAvailable = false;
             try
             {
-                primaryQueueClient = new QueueClient(PrimaryServiceBusConnectionString, QueueName);
+                primaryQueueClient = new QueueClient(Common.Contants.PrimaryConnectionString, QueueName);
                 primaryAvailable = true;
 
             }
@@ -38,7 +36,7 @@ namespace MQ.Emitter
             }
             try
             {
-                secondaryQueueClient = new QueueClient(SecondaryServiceBusConnectionString, QueueName);
+                secondaryQueueClient = new QueueClient(Common.Contants.SecondaryConnectionString, QueueName);
                 secondaryAvailable = true;
             }
             catch (Exception)
@@ -73,12 +71,17 @@ namespace MQ.Emitter
                 {
                     // Create a new message to send to the queue
                     var jobId = Guid.NewGuid();
-                    string messageBody = GetJobInformation(jobId);
-                    var message = new Message(Encoding.UTF8.GetBytes(messageBody));
+
+                    // Emulate a custom encoding
+                    var bytesBefore = Encoding.UTF8.GetBytes(GetJobInformation(jobId));
+                    var bytes = Common.Tools.Compression.Compress(bytesBefore);
+
+                    // prepare the message
+                    var message = new Message(bytes);
                     message.UserProperties.Add(Common.Contants.IdProperty, jobId);
 
                     // Write the body of the message to the console
-                    Console.WriteLine($"Sending message: {messageBody}");
+                    Console.WriteLine($"Sending message: {bytes}");
 
                     // Send the message to the queue
                     taskList.Add(SendMessageHAAsync(message));
@@ -93,8 +96,20 @@ namespace MQ.Emitter
 
         private static string GetJobInformation(Guid jobId)
         {
-            var jobInformation = new JobInformation { JobId = jobId, Message = $"Message Id: {jobId}", Process = false };
-            string messageBody = JsonConvert.SerializeObject(jobInformation);
+            var order = new Order { OrderId = jobId, Message = $"Message Id: {jobId}", Status = OrderStatus.Pending };
+            var rnd = new Random(Environment.TickCount);
+            var orderDetails = new List<OrderDetail>();
+
+            for(var i=0;i<100;i++)
+            {
+                var sku = (i + 100).ToString();
+                var orderDetail = new OrderDetail { Sku = sku, Description = $"Item Description {sku}", Qty = rnd.Next(1, 100), Price = rnd.Next(10, 1000) };
+                orderDetails.Add(orderDetail);
+            }
+
+            order.OrderDetails = orderDetails.ToArray();
+            
+            string messageBody = JsonConvert.SerializeObject(order);
             return messageBody;
         }
 

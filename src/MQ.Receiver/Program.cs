@@ -31,7 +31,7 @@
         {
             try
             {
-                primaryQueueClient = new QueueClient(PrimaryServiceBusConnectionString, QueueName);
+                primaryQueueClient = new QueueClient(Common.Contants.PrimaryConnectionString, QueueName);
                 primaryAvailable = true;
             }
             catch (Exception)
@@ -39,7 +39,7 @@
             }
             try
             {
-                secondaryQueueClient = new QueueClient(SecondaryServiceBusConnectionString, QueueName);
+                secondaryQueueClient = new QueueClient(Common.Contants.SecondaryConnectionString, QueueName);
                 secondaryAvailable = true;
             }
             catch (Exception)
@@ -102,7 +102,7 @@
 
 
             // Process the message
-            Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(message.Body)}");
+            Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(Common.Tools.Compression.Decompress(message.Body))}");
 
             var jobid = (Guid)message.UserProperties[Common.Contants.IdProperty];
             if (!IsProcessed(jobid))
@@ -133,7 +133,7 @@
 
 
             // Process the message
-            Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(message.Body)}");
+            Console.WriteLine($"Received message: SequenceNumber:{message.SystemProperties.SequenceNumber} Body:{Encoding.UTF8.GetString(Common.Tools.Compression.Decompress(message.Body))}");
 
             var jobid = (Guid)message.UserProperties[Common.Contants.IdProperty];
             if (!IsProcessed(jobid))

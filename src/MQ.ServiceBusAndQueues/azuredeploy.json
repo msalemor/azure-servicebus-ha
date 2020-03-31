@@ -8,7 +8,7 @@
         "description": "Name of the Service Bus namespace"
       }
     },
-    "secondaryRerviceBusNamespaceName": {
+    "secondaryServiceBusNamespaceName": {
       "type": "string",
       "metadata": {
         "description": "Name of the Service Bus namespace"
@@ -45,7 +45,7 @@
     "defaultSASKeyName": "RootManageSharedAccessKey",
     "authRuleResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('primaryServiceBusNamespaceName'), variables('defaultSASKeyName'))]",
     "defaultSASKeyName1": "RootManageSharedAccessKey",
-    "authRuleResourceId1": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('secondaryRerviceBusNamespaceName'), variables('defaultSASKeyName1'))]"
+    "authRuleResourceId1": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('secondaryServiceBusNamespaceName'), variables('defaultSASKeyName1'))]"
   },
   "resources": [
     {
@@ -82,8 +82,36 @@
       ]
     },
     {
+      "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
       "apiVersion": "2017-04-01",
-      "name": "[parameters('secondaryRerviceBusNamespaceName')]",
+      "name": "[concat(parameters('primaryServiceBusNamespaceName'), '/send-policy')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('primaryServiceBusNamespaceName'))]"
+      ],
+      "properties": {
+        "rights": [
+          "Send"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+      "apiVersion": "2017-04-01",
+      "name": "[concat(parameters('primaryServiceBusNamespaceName'), '/listen-policy')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('primaryServiceBusNamespaceName'))]"
+      ],
+      "properties": {
+        "rights": [
+          "Listen"
+        ]
+      }
+    },
+    {
+      "apiVersion": "2017-04-01",
+      "name": "[parameters('secondaryServiceBusNamespaceName')]",
       "type": "Microsoft.ServiceBus/namespaces",
       "location": "[parameters('secondarylocation')]",
       "sku": {
@@ -96,7 +124,7 @@
           "name": "[parameters('serviceBusQueueName2')]",
           "type": "Queues",
           "dependsOn": [
-            "[concat('Microsoft.ServiceBus/namespaces/', parameters('secondaryRerviceBusNamespaceName'))]"
+            "[concat('Microsoft.ServiceBus/namespaces/', parameters('secondaryServiceBusNamespaceName'))]"
           ],
           "properties": {
             "lockDuration": "PT5M",
@@ -113,6 +141,34 @@
           }
         }
       ]
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+      "apiVersion": "2017-04-01",
+      "name": "[concat(parameters('secondaryServiceBusNamespaceName'), '/send-policy')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('secondaryServiceBusNamespaceName'))]"
+      ],
+      "properties": {
+        "rights": [
+          "Send"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ServiceBus/namespaces/AuthorizationRules",
+      "apiVersion": "2017-04-01",
+      "name": "[concat(parameters('secondaryServiceBusNamespaceName'), '/listen-policy')]",
+      "location": "East US",
+      "dependsOn": [
+        "[resourceId('Microsoft.ServiceBus/namespaces', parameters('secondaryServiceBusNamespaceName'))]"
+      ],
+      "properties": {
+        "rights": [
+          "Listen"
+        ]
+      }
     }
   ],
   "outputs": {
