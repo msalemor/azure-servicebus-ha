@@ -1,0 +1,58 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29911.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D923F30D-C635-4CA0-AAEE-0E1D29E07059}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQ.Emitter", "src\MQ.Emitter\MQ.Emitter.csproj", "{915FF914-EB20-4A5B-A2DC-419E819A91FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQ.Receiver", "src\MQ.Receiver\MQ.Receiver.csproj", "{FA96D1AD-7252-4951-A2F6-0B1CB86A1C25}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MQ.Common", "src\MQ.Common\MQ.Common.csproj", "{FB9E5E74-0C4A-4D55-9B19-196418523DD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{F1CD474A-10AE-4ADB-B18C-89947D1A8A60}"
+EndProject
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "MQ.ServiceBusAndQueues", "src\MQ.ServiceBusAndQueues\MQ.ServiceBusAndQueues.deployproj", "{971FF92D-EE8C-4C6C-B503-6BBD250EB29A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2BE2F9A0-F8E8-485C-9E65-1F11E19C4F19}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{915FF914-EB20-4A5B-A2DC-419E819A91FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{915FF914-EB20-4A5B-A2DC-419E819A91FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{915FF914-EB20-4A5B-A2DC-419E819A91FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{915FF914-EB20-4A5B-A2DC-419E819A91FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA96D1AD-7252-4951-A2F6-0B1CB86A1C25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA96D1AD-7252-4951-A2F6-0B1CB86A1C25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA96D1AD-7252-4951-A2F6-0B1CB86A1C25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA96D1AD-7252-4951-A2F6-0B1CB86A1C25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB9E5E74-0C4A-4D55-9B19-196418523DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB9E5E74-0C4A-4D55-9B19-196418523DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB9E5E74-0C4A-4D55-9B19-196418523DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB9E5E74-0C4A-4D55-9B19-196418523DD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{971FF92D-EE8C-4C6C-B503-6BBD250EB29A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{971FF92D-EE8C-4C6C-B503-6BBD250EB29A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{971FF92D-EE8C-4C6C-B503-6BBD250EB29A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{971FF92D-EE8C-4C6C-B503-6BBD250EB29A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{915FF914-EB20-4A5B-A2DC-419E819A91FF} = {D923F30D-C635-4CA0-AAEE-0E1D29E07059}
+		{FA96D1AD-7252-4951-A2F6-0B1CB86A1C25} = {D923F30D-C635-4CA0-AAEE-0E1D29E07059}
+		{FB9E5E74-0C4A-4D55-9B19-196418523DD4} = {D923F30D-C635-4CA0-AAEE-0E1D29E07059}
+		{971FF92D-EE8C-4C6C-B503-6BBD250EB29A} = {F1CD474A-10AE-4ADB-B18C-89947D1A8A60}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {929D649E-3FB4-4D4A-B825-AB0AB8C5F92A}
+	EndGlobalSection
+EndGlobal
