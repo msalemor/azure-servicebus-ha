@@ -8,6 +8,8 @@ Currently Azure Service Bus in geo-disaster recovery copies the metadata only, b
 
 - https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-geo-dr
 
+
+
 ## Active-Active Approach
 
 - Create two namespaces in different regions
@@ -22,33 +24,57 @@ Currently Azure Service Bus in geo-disaster recovery copies the metadata only, b
   <img src="active-active.png" width="90%" title="Active-Active pattern">
 </p>
 
-### Emmitter Logic
+## Active-Passive Approach
+
+- Create two namespaces in different regions
+- Create a queue with the same name in the different regions
+- Send a message to primary region
+- On failure, send messages to secondary region
+- Receive from both regions
+  - Have logic to determine if message has already been processed 
+
+### Diagram
+
+<p align="center">
+  <img src="active-passive.png" width="90%" title="Active-Passive pattern">
+</p>
+
+## Emmitter Logic
 
 Try to write message to both regions
 
 ```c#
 private static async Task SendMessageHAAsync(Message message)
 {
+    if (!primaryAvailable && !secondaryAvailable)
+    {
+        Console.WriteLine("No region is available to write messages.");
+        await CloseAsync();
+        Environment.Exit(-1);
+    }
+
     try
     {
         await primaryQueueClient.SendAsync(message);
     }
     catch (Exception)
     {
-        //throw;
+        primaryAvailable = false;
     }
-    try
-    {
-        await secondaryQueueClient.SendAsync(message);
-    }
-    catch (Exception)
-    {
-        //throw;
-    }
+    if (Mode == ProcessingMode.ActiveActive || (Mode == ProcessingMode.ActivePassive && !primaryAvailable))
+        try
+        {
+            await secondaryQueueClient.SendAsync(message);
+        }
+        catch (Exception)
+        {
+            //throw;
+            secondaryAvailable = false;
+        }
 }
 ```
 
-### Receiver Logic
+## Receiver Logic
 
 Process from one region, and discard from second region if message has already been processed.
 
@@ -89,9 +115,9 @@ static async Task PrimaryProcessMessagesAsync(Message message, CancellationToken
 }
 ```
 
-### Messages Already Processed Logic
+## Messages Already Processed Logic
 
-This sample app uses a simple approach to keep state in memory.
+This sample app uses a very simple approach to keep state in memory, but in production this should be replaced with a more resilient and scalable solution.
 
 ```c#
 static object obj = new object();
@@ -109,18 +135,5 @@ static bool IsProcessed(Guid guid)
 }
 ```
 
-## Active-Passive Approach
 
-- Create two namespaces in different regions
-- Create a queue with the same name in the different regions
-- Send a message to primary region
-- On failure, send messages to secondary region
-- Receive from both regions
-  - Have logic to determine if message has already been processed 
-
-### Diagram
-
-<p align="center">
-  <img src="active-passive.png" width="90%" title="Active-Passive pattern">
-</p>
 
