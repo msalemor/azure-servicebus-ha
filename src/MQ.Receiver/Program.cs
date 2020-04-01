@@ -29,22 +29,7 @@
 
         static async Task MainAsync()
         {
-            try
-            {
-                primaryQueueClient = new QueueClient(Common.Contants.PrimaryConnectionString, QueueName);
-                primaryAvailable = true;
-            }
-            catch (Exception)
-            {
-            }
-            try
-            {
-                secondaryQueueClient = new QueueClient(Common.Contants.SecondaryConnectionString, QueueName);
-                secondaryAvailable = true;
-            }
-            catch (Exception)
-            {
-            }
+            InitializeQueuesAsync();
 
             if (!primaryAvailable && !secondaryAvailable)
             {
@@ -63,6 +48,26 @@
             Console.ReadKey();
 
             await CloseQueuesAsync();
+        }
+
+        private static void InitializeQueuesAsync()
+        {
+            try
+            {
+                primaryQueueClient = new QueueClient(Common.Contants.PrimaryConnectionString, QueueName);
+                primaryAvailable = true;
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                secondaryQueueClient = new QueueClient(Common.Contants.SecondaryConnectionString, QueueName);
+                secondaryAvailable = true;
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private static async Task CloseQueuesAsync()

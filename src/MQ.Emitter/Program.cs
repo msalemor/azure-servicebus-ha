@@ -19,13 +19,28 @@ namespace MQ.Emitter
         private static IQueueClient secondaryQueueClient;
         private static bool primaryAvailable;
         private static bool secondaryAvailable;
+        private const int NumberOfMessages = 10;
 
         // Active-Active or Active-Passive
         private static ProcessingMode Mode = ProcessingMode.ActiveActive;
 
         public static async Task Main(string[] args)
         {
-            const int numberOfMessages = 10;
+            InitializeQueuesAsync();
+
+            Console.WriteLine("======================================================");
+            Console.WriteLine("Press ENTER key to exit after sending all the messages.");
+            Console.WriteLine("======================================================");
+
+            // Send messages.
+            await SendMessagesAsync(NumberOfMessages);
+            Console.ReadKey();
+
+            await CloseQueuesAsync();
+        }
+
+        private static void InitializeQueuesAsync()
+        {
             primaryAvailable = false;
             secondaryAvailable = false;
             try
@@ -45,16 +60,6 @@ namespace MQ.Emitter
             catch (Exception)
             {
             }
-
-            Console.WriteLine("======================================================");
-            Console.WriteLine("Press ENTER key to exit after sending all the messages.");
-            Console.WriteLine("======================================================");
-
-            // Send messages.
-            await SendMessagesAsync(numberOfMessages);
-            Console.ReadKey();
-
-            await CloseQueuesAsync();
         }
 
         private static async Task CloseQueuesAsync()
