@@ -62,6 +62,11 @@
 
             Console.ReadKey();
 
+            await CloseQueuesAsync();
+        }
+
+        private static async Task CloseQueuesAsync()
+        {
             try
             {
                 await primaryQueueClient.CloseAsync();

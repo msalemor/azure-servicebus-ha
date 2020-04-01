@@ -52,13 +52,12 @@ namespace MQ.Emitter
 
             // Send messages.
             await SendMessagesAsync(numberOfMessages);
-
             Console.ReadKey();
 
-            await CloseAsync();
+            await CloseQueuesAsync();
         }
 
-        private static async Task CloseAsync()
+        private static async Task CloseQueuesAsync()
         {
             try
             {
@@ -113,16 +112,13 @@ namespace MQ.Emitter
             var order = new Order { OrderId = jobId, Message = $"Message Id: {jobId}", Status = OrderStatus.Pending };
             var rnd = new Random(Environment.TickCount);
             var orderDetails = new List<OrderDetail>();
-
             for (var i = 0; i < 100; i++)
             {
                 var sku = (i + 100).ToString();
                 var orderDetail = new OrderDetail { Sku = sku, Description = $"Item Description {sku}", Qty = rnd.Next(1, 100), Price = rnd.Next(10, 1000) };
                 orderDetails.Add(orderDetail);
             }
-
             order.OrderDetails = orderDetails.ToArray();
-
             string messageBody = JsonConvert.SerializeObject(order);
             return messageBody;
         }
@@ -132,10 +128,9 @@ namespace MQ.Emitter
             if (!primaryAvailable && !secondaryAvailable)
             {
                 Console.WriteLine("Both the primary and secondary namespaces are not avaible.");
-                await CloseAsync();
+                await CloseQueuesAsync();
                 Environment.Exit(-1);
             }
-
             try
             {
                 await primaryQueueClient.SendAsync(message);
