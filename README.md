@@ -41,7 +41,8 @@ Currently Azure Service Bus in geo-disaster recovery copies the metadata only, b
 
 ## Emmitter Logic
 
-Try to write message to both regions
+- Active-Active: Try to write message to both regions.
+- Active-Passive: Detect failure in primary, and then switch to secondary on failure.
 
 ```c#
 private static async Task SendMessageHAAsync(Message message)
