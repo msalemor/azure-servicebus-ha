@@ -151,7 +151,6 @@ namespace MQ.Emitter
                 }
                 catch (Exception)
                 {
-                    //throw;
                     secondaryAvailable = false;
                 }
         }
