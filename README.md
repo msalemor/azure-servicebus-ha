@@ -4,11 +4,15 @@ Azure Service High Availability Pattern
 
 ## Service Bus - Geo-Disaster Recovery
 
-Currently Azure Service Bus in geo-disaster recovery copies the metadata only, but not the data. The secondary region is readonly and will become writable once a failover is initiated.
+Currently Azure Service Bus in geo-disaster recovery copies the metadata only, but not the data. The secondary region is readonly and becomes writable once a failover is initiated. Messages could be stranded in the primary region once it comes back up, and there's a need to recreate the pairings from the secondary to the primary after to protect against future region outages.
 
 - https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-geo-dr
 
+## Other Approaches to protect the data
 
+This document discusses other approaches to making the messages more resilient and highly availably using an active-active and active-passive approach which is discussed in detailed in this video:
+
+- https://channel9.msdn.com/Blogs/Subscribe/Service-Bus-Messaging-High-Availability-Options?term=service%20bus%20high%20availability&lang-en=true
 
 ## Active-Active Approach
 
