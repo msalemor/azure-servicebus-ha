@@ -4,7 +4,7 @@ Azure Service High Availability Pattern
 
 ## Service Bus - Geo-Disaster Recovery
 
-Currently Azure Service Bus in geo-disaster recovery copies the metadata only, but not the data. The secondary region is readonly and becomes writable once a failover is initiated. Messages could be stranded in the primary region once it comes back up, and there's a need to recreate the pairings from the secondary to the primary after to protect against future region outages.
+Currently Azure Service Bus in geo-disaster recovery copies the metadata only, but not the data. The secondary region is readonly and becomes writable once a failover is completed. Messages could be stranded in the primary region once it comes back up, and there's a need to recreate the pairings from the secondary to the primary after the failover to protect against future region outages.
 
 - https://docs.microsoft.com/en-us/azure/service-bus-messaging/service-bus-geo-dr
 
